@@ -20,6 +20,14 @@ public class Agente implements AgenteInterfaz{
     Vector listaNodos; //itinerario
     int puertoRMI = 12345;
     
+    public double randDouble(double bound1, double bound2) {
+        //make sure bound2> bound1
+        double min = Math.min(bound1, bound2);
+        double max = Math.max(bound1, bound2);
+        //math.random gives random number from 0 to 1
+        return min + (Math.random() * (max - min));
+    }
+    
     public Agente(String miNombre, Vector laListaComputadoras, int elPuertoRMI) {
         nombre = miNombre;
         listaNodos = laListaComputadoras;
@@ -29,33 +37,40 @@ public class Agente implements AgenteInterfaz{
 
     @Override
     public void ejecuta() {
-        String actual, siguiente;
+        String actual, siguiente; 
         dormir(2); //pausa para poder visualizarlo
-        System.out.println("Aqui el agente 007");
-        actual = (String) listaNodos.elementAt(indiceNodo);
-        indiceNodo++;
-        if (indiceNodo < listaNodos.size()) {
-            // si hay mas computadoras que visitar
+        
+        double prob = this.randDouble(1, 100);
+        
+        
+        if (prob > 30){
+            actual = (String) listaNodos.elementAt(indiceNodo);
+            
+            
+            if (indiceNodo >= listaNodos.size() - 1){
+                indiceNodo--;
+            }
+            else{
+               indiceNodo++;
+            }
+            
             siguiente = (String) listaNodos.elementAt(indiceNodo);
-            dormir(2); //pausa para poder visualizarlo
-            try{
-                //Localiza el registro RMI en el siguiente nodo
+           try{
+                
                 Registry registro = LocateRegistry.getRegistry("localhost", puertoRMI);
                 ServidorInterfaz h = (ServidorInterfaz) registro.lookup(siguiente);
-                System.out.println("Buscando " + siguiente +" en " + actual + " completado ");
-                dormir(2); //pausa para poder visualizarlo
-                //Pide al servidor del siguiente nodo que reciba a este agente
+                System.out.println("Navegando a la " + siguiente +" desde la " + actual + ", tierra a la vista!");
+                dormir(2);
                 h.recibe(this);
             } //fin try
             catch(Exception e) {
                 System.out.println("Excepcion en el ejecuta del Agente: " + e);
                 
             }
-        } //fin if
-        else{ //si se han hecho todas las paradas
-            dormir(2); //pausa para poder visualizarlo
-            System.out.println("El Agente 007 ha regresado a casa");
-            dormir(2); //pausa para poder visualizarlo
-        } 
+        }else{
+            dormir(2);
+            System.out.println("El Pirata Peter ha encontrado la gema!");
+            dormir(2);
+        }
     }
 }

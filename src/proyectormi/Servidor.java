@@ -20,8 +20,11 @@ public class Servidor implements ServidorInterfaz{
     
     @Override
     public void recibe(Agente h) throws RemoteException {
+        
+        String isla =  h.listaNodos.elementAt(h.indiceNodo).toString();
+        
         dormir(3); //pausa para poder visualizarlo
-        System.out.println("****El Agente " +/* h.nombre +*/ " ha llegado");
+        System.out.println(h.nombre +  " ha llegado a la " + isla );
         h.ejecuta();
     }
     
@@ -30,7 +33,7 @@ public class Servidor implements ServidorInterfaz{
         try {
             Servidor servidor = new Servidor();
             ServidorInterfaz stub = (ServidorInterfaz) UnicastRemoteObject.exportObject(servidor, 0);
-            String nombre = "servidor" + args[0];
+            String nombre = "isla" + args[0];
 
            // inicializacion de registro RMI
             try {
