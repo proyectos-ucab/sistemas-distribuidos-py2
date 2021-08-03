@@ -32,8 +32,14 @@ public class Servidor implements ServidorInterfaz{
             ServidorInterfaz stub = (ServidorInterfaz) UnicastRemoteObject.exportObject(servidor, 0);
             String nombre = "servidor" + args[0];
 
-            Registry registry = LocateRegistry.createRegistry(puertoRMI);
-            registry.rebind(nombre, stub);
+           // inicializacion de registro RMI
+            try {
+                Registry registro = LocateRegistry.getRegistry(puertoRMI);
+                registro.rebind(nombre, servidor);
+            } catch (RemoteException e) {
+                Registry registro = LocateRegistry.createRegistry(puertoRMI);
+                registro.rebind(nombre, servidor);
+            }
 
             System.out.println("Servidor "  + nombre + " Listo" );
         } catch (RemoteException e) {

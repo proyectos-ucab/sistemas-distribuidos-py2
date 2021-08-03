@@ -23,7 +23,7 @@ public class Cliente {
         
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", puertoRMI);
-            ServidorInterfaz stub = (ServidorInterfaz) registry.lookup("Servidor1");
+            ServidorInterfaz stub = (ServidorInterfaz) registry.lookup("servidor1");
             
             System.out.println("Lookup for servidor1 completed ");
             System.out.println("***Buen viaje, " + " agente 007");
@@ -31,7 +31,7 @@ public class Cliente {
             Vector listaNodos = new Vector();
             listaNodos.addElement("servidor1");
             listaNodos.addElement("servidor2");
-            listaNodos.addElement("servidor3");
+            // listaNodos.addElement("servidor3");
             Agente a = new Agente("007", listaNodos, puertoRMI);
             stub.recibe(a);
             System.out.println("*** Buen trabajo, 007");
