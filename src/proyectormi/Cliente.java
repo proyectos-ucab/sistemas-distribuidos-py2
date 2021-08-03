@@ -22,7 +22,7 @@ public class Cliente {
     public static void main(String[] args) {
         
         try {
-            Registry registry = LocateRegistry.getRegistry("192.168.1.1", puertoRMI);
+            Registry registry = LocateRegistry.getRegistry("192.168.1.101", puertoRMI);
             ServidorInterfaz stub = (ServidorInterfaz) registry.lookup("servidor1");
             
             System.out.println("Lookup for servidor1 completed ");
