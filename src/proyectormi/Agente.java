@@ -5,11 +5,15 @@
  */
 package proyectormi;
 
+import java.io.IOException;
 import java.util.Vector;
 import static proyectormi.Servidor.dormir;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static proyectormi.Servidor.crearRuta;
 import static proyectormi.Servidor.mover;
 
 /**
@@ -69,7 +73,8 @@ public class Agente implements AgenteInterfaz{
         double prob = this.randDouble(1, 100);
         
         
-        if ((prob > 30) && (CorazonPrincesa == 0)){
+        //if ((prob > 30) && 
+        if (CorazonPrincesa == 0){
             actual = (String) listaNodos.elementAt(indiceNodo);
             if (indiceNodo >= listaNodos.size() - 1){
                 indiceNodo--;
@@ -84,6 +89,7 @@ public class Agente implements AgenteInterfaz{
                 Registry registro = LocateRegistry.getRegistry("localhost", puertoRMI);
                 ServidorInterfaz h = (ServidorInterfaz) registro.lookup(siguiente);
                 dormir(2);
+                crearRuta();
                 loot = mover();
                 //System.out.println(loot.toString());
                 
@@ -96,23 +102,33 @@ public class Agente implements AgenteInterfaz{
                     bolsaMoneda = bolsaMoneda + loot.get(i).getBolsaMoneda();
                     cofreJoya = cofreJoya + loot.get(i).getCofreJoya();
                     cofrePiedras = cofrePiedras + loot.get(i).getCofrePiedras();
-                    CorazonPrincesa = loot.get(i).getProbCorazonPrincesa();
+                    CorazonPrincesa = loot.get(i).getCorazonPrincesa();
                     
-                    if (CorazonPrincesa==1)
-                        System.out.println("El Pirata Peter ha encontrado la gema");
+                    if (CorazonPrincesa==1){
+                        System.out.println("El Pirata Peter ha encontrado la gema, wujuu :D ");
+                        return;
+                    }
                 }
                 
-                System.out.println("El pirata peter posee: ");
+                System.out.println("El pirata Peter posee en su inventario: ");
                 System.out.println("Libras = " +libras);
                 System.out.println("Mapas = " +mapa);
                 System.out.println("Barra de Oro = " +barraOro);
                 System.out.println("Barra de Plata = " +barraPlata);
                 System.out.println("Bolsa Perla = " +bolsaPerla);
-                System.out.println("Bola de Monedas  = " +bolsaMoneda);
+                System.out.println("Bolsa de Monedas  = " +bolsaMoneda);
                 System.out.println("Cofre de Joyas = " +cofreJoya);
                 System.out.println("Cofre de Piedras = " +cofrePiedras);
-   
+                System.out.println("");
+                System.out.println("");
                 System.out.println("Navegando a la " + siguiente +" desde la " + actual + ", tierra a la vista!");
+                try {
+                    Thread.sleep((long) (4*1000.0));
+                    //clrscr();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
                 h.recibe(this);
             } //fin try
             catch(Exception e) {
@@ -121,10 +137,19 @@ public class Agente implements AgenteInterfaz{
             }
         }else{
             dormir(2);
-            System.out.println("El Pirata Peter ha encontrado la gema!");
+            System.out.println("El Pirata Peter ha encontrado la gema! epaa ojo");
             dormir(2);
         }
     }
     
+    public static void clrscr(){
+    //Clears Screen in java
+    try {
+        if (System.getProperty("os.name").contains("Windows"))
+            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+        else
+            Runtime.getRuntime().exec("clear");
+    } catch (IOException | InterruptedException ex) {}
+    }
     
 }
