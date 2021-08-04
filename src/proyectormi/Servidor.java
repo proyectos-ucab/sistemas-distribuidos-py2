@@ -57,10 +57,10 @@ public class Servidor extends Canvas implements ServidorInterfaz{
         h.ejecuta();
     }
     
-    public Servidor(int x, int y) throws IOException{
+    public Servidor(int x, int y, String foto) throws IOException{
         double prob = this.randDouble(1, 100);
         
-        mapa = new ImageIcon(this.getClass().getResource("/mapas/Playa.jpg"));
+        mapa = new ImageIcon(this.getClass().getResource(foto));
         myLabel = new JLabel(mapa);
         myLabel.setSize(1200, 800);
         myLabel.setLocation(0, 0);
@@ -119,13 +119,13 @@ public class Servidor extends Canvas implements ServidorInterfaz{
                 int f1 = (int) f;
                 double g = randDouble(0, 1);
                 int g1 = (int) g;
-                double h = randDouble(1, 40);
-                System.out.println(h);
+                double h = randDouble(1, 60);
+                //System.out.println(h);
                 int h1 = (int) h;
                 
                 ruta.add(new Ruta(i,new Cofre(a1,b1,c1,d1,e1,f1,g1,h1)));
                 
-                System.out.println(i+" "+a1+b1+c1+d1+e1+f1+g1+h1);
+                //System.out.println(i+" "+a1+b1+c1+d1+e1+f1+g1+h1);
             }
         }
         
@@ -136,7 +136,7 @@ public class Servidor extends Canvas implements ServidorInterfaz{
     public static void main(String args[]) throws IOException {
            
         try {         
-            Servidor servidor = new Servidor(1000,1000);
+            Servidor servidor = new Servidor(1000,1000,"/mapas/Playa.jpg");
             ServidorInterfaz stub = (ServidorInterfaz) UnicastRemoteObject.exportObject(servidor, 0);
             String nombre = "isla" + args[0];
             
@@ -177,7 +177,7 @@ public class Servidor extends Canvas implements ServidorInterfaz{
             int condicion = 3;
             
             ventana.setVisible(false);
-            Servidor servidor = new Servidor(150,posicion);
+            Servidor servidor = new Servidor(150,posicion,"/mapas/Playa.jpg");
             //servidor.imprimirBarco(0,posicion);
             System.out.println("El barco se encuentra en la posicion: " +posicion);
                  
@@ -211,6 +211,7 @@ public class Servidor extends Canvas implements ServidorInterfaz{
                         
                         if(loot.size()!=0){
                             if (loot.get(loot.size()-1).getCorazonPrincesa()== 1){
+                            servidor = new Servidor(150,posicion,"/mapas/Playa2.jpg");
                             return loot;
                             }
                         }else{
@@ -227,7 +228,7 @@ public class Servidor extends Canvas implements ServidorInterfaz{
                 Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
             }
             posicion++;
-            //clrscr();
+            clrscr();
         }
         return loot;
     }

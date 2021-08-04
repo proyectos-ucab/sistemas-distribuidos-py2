@@ -33,6 +33,8 @@ public class Cliente {
             Vector listaNodos = new Vector();
             listaNodos.addElement("isla1");
             listaNodos.addElement("isla2");
+            listaNodos.addElement("isla3");
+            listaNodos.addElement("isla4");
             Agente a = new Agente("Pirata Peter", listaNodos, puertoRMI);
             stub.recibe(a);
             System.out.println("Felicidades por encontrar la gema, Pirata Peter!");
