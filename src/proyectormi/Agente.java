@@ -9,6 +9,7 @@ import java.util.Vector;
 import static proyectormi.Servidor.dormir;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
 import static proyectormi.Servidor.mover;
 
 /**
@@ -21,6 +22,18 @@ public class Agente implements AgenteInterfaz{
     Vector listaNodos; //itinerario
     int puertoRMI = 12345;
     
+    public static ArrayList<Cofre> loot = new ArrayList();
+    
+    //atributos
+    private int libras;
+    private int mapa;
+    private int barraOro;
+    private int barraPlata;
+    private int bolsaPerla;
+    private int bolsaMoneda;
+    private int cofreJoya;
+    private int cofrePiedras;
+    private int CorazonPrincesa;
     
     
     public double randDouble(double bound1, double bound2) {
@@ -36,6 +49,16 @@ public class Agente implements AgenteInterfaz{
         listaNodos = laListaComputadoras;
         indiceNodo = 0;
         puertoRMI = elPuertoRMI;
+        
+        libras=0;
+        mapa=0;
+        barraOro=0;
+        barraPlata=0;
+        bolsaPerla=0;
+        bolsaMoneda=0;
+        cofreJoya=0;
+        cofrePiedras=0;
+        CorazonPrincesa=0;
     }
 
     @Override
@@ -46,10 +69,8 @@ public class Agente implements AgenteInterfaz{
         double prob = this.randDouble(1, 100);
         
         
-        if (prob > 30){
+        if ((prob > 30) && (CorazonPrincesa == 0)){
             actual = (String) listaNodos.elementAt(indiceNodo);
-            
-            
             if (indiceNodo >= listaNodos.size() - 1){
                 indiceNodo--;
             }
@@ -62,8 +83,35 @@ public class Agente implements AgenteInterfaz{
                 
                 Registry registro = LocateRegistry.getRegistry("localhost", puertoRMI);
                 ServidorInterfaz h = (ServidorInterfaz) registro.lookup(siguiente);
-                System.out.println(dormir(2));
-                mover();
+                dormir(2);
+                loot = mover();
+                //System.out.println(loot.toString());
+                
+                for(int i=0;i<loot.size();i++){
+                    libras = libras + loot.get(i).getLibras();
+                    mapa = mapa + loot.get(i).getMapa();
+                    barraOro = barraOro + loot.get(i).getBarraOro();
+                    barraPlata = barraPlata + loot.get(i).getBarraPlata();
+                    bolsaPerla = bolsaPerla + loot.get(i).getBolsaPerla();
+                    bolsaMoneda = bolsaMoneda + loot.get(i).getBolsaMoneda();
+                    cofreJoya = cofreJoya + loot.get(i).getCofreJoya();
+                    cofrePiedras = cofrePiedras + loot.get(i).getCofrePiedras();
+                    CorazonPrincesa = loot.get(i).getProbCorazonPrincesa();
+                    
+                    if (CorazonPrincesa==1)
+                        System.out.println("El Pirata Peter ha encontrado la gema");
+                }
+                
+                System.out.println("El pirata peter posee: ");
+                System.out.println("Libras = " +libras);
+                System.out.println("Mapas = " +mapa);
+                System.out.println("Barra de Oro = " +barraOro);
+                System.out.println("Barra de Plata = " +barraPlata);
+                System.out.println("Bolsa Perla = " +bolsaPerla);
+                System.out.println("Bola de Monedas  = " +bolsaMoneda);
+                System.out.println("Cofre de Joyas = " +cofreJoya);
+                System.out.println("Cofre de Piedras = " +cofrePiedras);
+   
                 System.out.println("Navegando a la " + siguiente +" desde la " + actual + ", tierra a la vista!");
                 h.recibe(this);
             } //fin try
