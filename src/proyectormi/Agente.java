@@ -9,6 +9,7 @@ import java.util.Vector;
 import static proyectormi.Servidor.dormir;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import static proyectormi.Servidor.mover;
 
 /**
  *
@@ -19,6 +20,8 @@ public class Agente implements AgenteInterfaz{
     String nombre;
     Vector listaNodos; //itinerario
     int puertoRMI = 12345;
+    
+    
     
     public double randDouble(double bound1, double bound2) {
         //make sure bound2> bound1
@@ -59,8 +62,9 @@ public class Agente implements AgenteInterfaz{
                 
                 Registry registro = LocateRegistry.getRegistry("localhost", puertoRMI);
                 ServidorInterfaz h = (ServidorInterfaz) registro.lookup(siguiente);
+                System.out.println(dormir(2));
+                mover();
                 System.out.println("Navegando a la " + siguiente +" desde la " + actual + ", tierra a la vista!");
-                dormir(2);
                 h.recibe(this);
             } //fin try
             catch(Exception e) {
@@ -73,4 +77,6 @@ public class Agente implements AgenteInterfaz{
             dormir(2);
         }
     }
+    
+    
 }
